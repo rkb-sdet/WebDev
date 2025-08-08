@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>JavaScript Conditional Statements Demo</title>
+</head>
+<body>
+  <h2>JavaScript Conditional Statements Demo</h2>
+  <button onclick="runDemo()">Run Example</button>
+  <pre id="output"></pre>
+
+  <script>
+    function runDemo() {
+      let result = "";
+
+      // 1️⃣ if Statement
+      result += "=== if Statement ===\n";
+      let age = 18;
+      if (age >= 18) {
+        result += "Access granted.\n\n";
+      }
+
+      // 2️⃣ if...else Statement
+      result += "=== if...else Statement ===\n";
+      let isSubscribed = false;
+      if (isSubscribed) {
+        result += "Welcome back!\n\n";
+      } else {
+        result += "Please subscribe.\n\n";
+      }
+
+      // 3️⃣ if...else if...else Statement
+      result += "=== if...else if...else ===\n";
+      let score = 75;
+      if (score >= 90) {
+        result += "Grade: A\n\n";
+      } else if (score >= 75) {
+        result += "Grade: B\n\n";
+      } else {
+        result += "Grade: C or below\n\n";
+      }
+
+      // 4️⃣ switch Statement
+      result += "=== switch Statement ===\n";
+      let day = "Monday";
+      switch (day) {
+        case "Monday":
+          result += "Start of the week\n\n";
+          break;
+        case "Friday":
+          result += "End of the week\n\n";
+          break;
+        default:
+          result += "Midweek day\n\n";
+      }
+
+      // 5️⃣ Ternary Operator
+      result += "=== Ternary Operator ===\n";
+      let isMember = true;
+      let fee = isMember ? "$0" : "$10";
+      result += `Fee: ${fee}\n\n`;
+
+      // 6️⃣ Real-World Example: Login Check
+      result += "=== Login Check Example ===\n";
+      let username = "john";
+      let password = "1234";
+      if (username === "john" && password === "1234") {
+        result += "Login successful\n";
+      } else {
+        result += "Invalid credentials\n";
+      }
+
+      // Display output
+      document.getElementById("output").textContent = result;
+    }
+  </script>
+</body>
+</html>

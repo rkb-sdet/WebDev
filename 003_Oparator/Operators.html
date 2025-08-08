@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>JavaScript Operators Demo</title>
+</head>
+<body>
+  <h2>JavaScript Operators & Expressions Demo</h2>
+  <button onclick="runDemo()">Run Example</button>
+  <pre id="output"></pre>
+
+  <script>
+    function runDemo() {
+      let result = ""; // To collect all outputs
+
+      // 1️⃣ Arithmetic Operators
+      let a = 10, b = 3;
+      result += "=== Arithmetic Operators ===\n";
+      result += `a + b = ${a + b}\n`; // Addition
+      result += `a - b = ${a - b}\n`; // Subtraction
+      result += `a * b = ${a * b}\n`; // Multiplication
+      result += `a / b = ${(a / b).toFixed(2)}\n`; // Division
+      result += `a % b = ${a % b}\n\n`; // Modulus
+
+      // Real-world arithmetic example: price calculation
+      let price = 100, tax = 18;
+      let total = price + tax;
+      result += `Total Price: ${total}\n\n`;
+
+      // 2️⃣ Assignment Operators
+      result += "=== Assignment Operators ===\n";
+      let x = 10;
+      result += `x = ${x}\n`;
+      x += 5; result += `x += 5 → ${x}\n`;
+      x -= 3; result += `x -= 3 → ${x}\n`;
+      x *= 2; result += `x *= 2 → ${x}\n`;
+      x /= 4; result += `x /= 4 → ${x}\n\n`;
+
+      // 3️⃣ Comparison Operators
+      result += "=== Comparison Operators ===\n";
+      result += `5 == '5' → ${5 == '5'}\n`;
+      result += `5 === '5' → ${5 === '5'}\n`;
+      result += `5 != '5' → ${5 != '5'}\n`;
+      result += `5 !== '5' → ${5 !== '5'}\n`;
+      result += `10 > 5 → ${10 > 5}\n`;
+      result += `2 < 4 → ${2 < 4}\n`;
+      result += `3 >= 3 → ${3 >= 3}\n`;
+      result += `2 <= 3 → ${2 <= 3}\n\n`;
+
+      // Real-world comparison example: voting eligibility
+      let userAge = 20;
+      result += (userAge >= 18) 
+        ? "You are eligible to vote.\n\n" 
+        : "You are not eligible.\n\n";
+
+      // 4️⃣ Logical Operators
+      result += "=== Logical Operators ===\n";
+      result += `true && false → ${true && false}\n`;
+      result += `true || false → ${true || false}\n`;
+      result += `!true → ${!true}\n\n`;
+
+      // Real-world logical example: shopping cart discount
+      let totalAmount = 2500;
+      let hasCoupon = true;
+      if (totalAmount > 2000 && hasCoupon) {
+        result += "You get a 20% discount!\n";
+      } else {
+        result += "No discount available.\n";
+      }
+
+      // Show everything in the <pre> element
+      document.getElementById("output").textContent = result;
+    }
+  </script>
+</body>
+</html>

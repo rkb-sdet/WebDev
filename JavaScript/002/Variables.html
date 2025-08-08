@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Profile Demo — Variables & Data Types</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:#f5f7fb; color:#111; padding:24px; }
+    .container { max-width:900px; margin:0 auto; display:grid; grid-template-columns: 1fr 360px; gap:20px; }
+    .card { background:white; border-radius:12px; padding:18px; box-shadow: 0 6px 20px rgba(15,20,30,0.07); }
+    h2 { margin:0 0 12px 0; font-size:1.15rem; }
+    label{ display:block; margin-top:10px; font-size:.9rem; }
+    input[type="text"], input[type="number"] { width:100%; padding:8px 10px; margin-top:6px; border-radius:8px; border:1px solid #dde4f0; }
+    button { margin-top:12px; padding:8px 12px; border-radius:8px; border:0; cursor:pointer; box-shadow:0 4px 12px rgba(30,40,80,0.06); }
+    .btn-primary { background:#3b82f6; color:white; }
+    .btn-ghost { background:transparent; border:1px solid #e6eefc; color:#0b2b5a; }
+    ul { padding-left:18px; margin:6px 0 0 0; }
+    .meta { font-size:.85rem; color:#556; margin-top:8px; }
+    .log { white-space:pre-wrap; background:#0b1220; color:#e6f1ff; padding:10px; border-radius:8px; height:120px; overflow:auto; font-family:monospace; font-size:12px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Left: Profile display -->
+    <div class="card" id="profileCard">
+      <h2>👤 Profile Card</h2>
+      <div><strong>Name:</strong> <span id="displayName"></span></div>
+      <div><strong>Age:</strong> <span id="displayAge"></span></div>
+      <div><strong>City:</strong> <span id="displayCity"></span></div>
+      <div><strong>Premium:</strong> <span id="displayPremium"></span></div>
+
+      <div class="meta">Skills</div>
+      <ul id="skillsList"></ul>
+
+      <div class="meta">Account created</div>
+      <div id="displayDate" class="meta"></div>
+
+      <hr style="margin:14px 0;">
+      <div><strong>Raw profile object (for debugging):</strong></div>
+      <div class="log" id="debugLog"></div>
+    </div>
+
+    <!-- Right: Controls (edit fields) -->
+    <div class="card">
+      <h2>✏️ Edit Profile</h2>
+
+      <label for="inputName">Name</label>
+      <input id="inputName" type="text" placeholder="Name">
+
+      <label for="inputAge">Age</label>
+      <input id="inputAge" type="number" min="0" placeholder="Age">
+
+      <label for="inputCity">City</label>
+      <input id="inputCity" type="text" placeholder="City">
+
+      <label for="inputSkill">Add Skill</label>
+      <input id="inputSkill" type="text" placeholder="e.g. Testing">
+      <button id="addSkillBtn" class="btn-ghost">Add Skill</button>
+
+      <div style="margin-top:10px;">
+        <button id="togglePremiumBtn" class="btn-primary">Toggle Premium</button>
+        <button id="resetBtn" class="btn-ghost">Reset to Default</button>
+      </div>
+
+      <hr style="margin:14px 0;">
+      <div style="font-size:.9rem;color:#445;">Console log (mirror of <code>console.log</code> calls):</div>
+      <div class="log" id="consoleMirror"></div>
+    </div>
+  </div>
+
+  <script>
+    /****************************************************************
+     * Demo: variables & data types in a real HTML app
+     *
+     * - var, let, const usage shown below
+     * - data types: String, Number, Boolean, Array, Object
+     ****************************************************************/
+
+    // -----------------------
+    // 1. "Initialization"
+    // -----------------------
+    // var: function-scoped, hoisted (we use it to show older style)
+    var defaultName = "Rohit";          // string
+    // const: block-scoped, cannot be reassigned
+    const accountCreated = "2025-01-15"; // string (date stored as string for simplicity)
+    // let: block-scoped, can be reassigned
+    let defaultAge = 28;               // number
+    let defaultCity = "Kanpur";        // string
+    let defaultSkills = ["JavaScript", "HTML", "CSS"]; // array
+    let defaultPremium = true;         // boolean
+
+    // Create profile object (object type)
+    let profile = {
+      name: defaultName,
+      age: defaultAge,
+      city: defaultCity,
+      skills: defaultSkills.slice(), // clone array
+      isPremium: defaultPremium,
+      createdAt: accountCreated
+    };
+
+    // -----------------------
+    // 2. DOM references
+    // -----------------------
+    const displayName = document.getElementById("displayName");
+    const displayAge = document.getElementById("displayAge");
+    const displayCity = document.getElementById("displayCity");
+    const displayPremium = document.getElementById("displayPremium");
+    const skillsList = document.getElementById("skillsList");
+    const displayDate = document.getElementById("displayDate");
+
+    const inputName = document.getElementById("inputName");
+    const inputAge = document.getElementById("inputAge");
+    const inputCity = document.getElementById("inputCity");
+    const inputSkill = document.getElementById("inputSkill");
+    const addSkillBtn = document.getElementById("addSkillBtn");
+    const togglePremiumBtn = document.getElementById("togglePremiumBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    const debugLog = document.getElementById("debugLog");
+    const consoleMirror = document.getElementById("consoleMirror");
+
+    // Helper to mirror console logs into the UI
+    (function installMirror(){
+      const origLog = console.log;
+      console.log = function(...args){
+        origLog.apply(console, args);
+        const formatted = args.map(a => {
+          if (typeof a === "object") return JSON.stringify(a, null, 2);
+          return String(a);
+        }).join(" ");
+        consoleMirror.textContent += formatted + "\n";
+        consoleMirror.scrollTop = consoleMirror.scrollHeight;
+      };
+    })();
+
+    // -----------------------
+    // 3. Render function
+    // -----------------------
+    function renderProfile(){
+      displayName.textContent = profile.name;
+      displayAge.textContent = profile.age;
+      displayCity.textContent = profile.city;
+      displayPremium.textContent = profile.isPremium ? "Yes" : "No";
+
+      // Skill list rendering
+      skillsList.innerHTML = "";
+      profile.skills.forEach((s, idx) => {
+        const li = document.createElement("li");
+        li.textContent = s + " ";
+        // small remove button for each skill (demonstrates array mutation)
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "×";
+        removeBtn.style.marginLeft = "8px";
+        removeBtn.style.border = "none";
+        removeBtn.style.background = "transparent";
+        removeBtn.style.cursor = "pointer";
+        removeBtn.title = "Remove skill";
+        removeBtn.onclick = () => {
+          profile.skills.splice(idx, 1); // mutate array
+          console.log("Removed skill at index", idx, "->", profile.skills);
+          renderProfile();
+          mirrorDebug();
+        };
+        li.appendChild(removeBtn);
+        skillsList.appendChild(li);
+      });
+
+      displayDate.textContent = profile.createdAt;
+
+      // Debug: show raw object
+      debugLog.textContent = JSON.stringify(profile, null, 2);
+    }
+
+    // Mirror debug to console too
+    function mirrorDebug(){ console.log("Current profile:", profile); }
+
+    // -----------------------
+    // 4. Wire UI controls
+    // -----------------------
+    // Fill inputs with current values
+    function fillInputs(){
+      inputName.value = profile.name;
+      inputAge.value = profile.age;
+      inputCity.value = profile.city;
+      inputSkill.value = "";
+    }
+
+    // When fields change, update object (demonstrates reassignment)
+    inputName.addEventListener("input", (e) => {
+      // 'let' variable example: reassigning profile.name
+      profile.name = e.target.value;
+      renderProfile();
+      mirrorDebug();
+    });
+
+    inputAge.addEventListener("input", (e) => {
+      // Convert value (string) to number
+      const newAge = Number(e.target.value) || 0;
+      profile.age = newAge;
+      renderProfile();
+      mirrorDebug();
+    });
+
+    inputCity.addEventListener("input", (e) => {
+      profile.city = e.target.value;
+      renderProfile();
+      mirrorDebug();
+    });
+
+    addSkillBtn.addEventListener("click", () => {
+      const skill = inputSkill.value.trim();
+      if (!skill) return;
+      // Array mutation: push
+      profile.skills.push(skill);
+      console.log("Added skill:", skill);
+      fillInputs();
+      renderProfile();
+      mirrorDebug();
+    });
+
+    togglePremiumBtn.addEventListener("click", () => {
+      // Boolean flip
+      profile.isPremium = !profile.isPremium;
+      console.log("Toggled premium ->", profile.isPremium);
+      renderProfile();
+      mirrorDebug();
+    });
+
+    resetBtn.addEventListener("click", () => {
+      // Reset profile using initial variables (showing const/var/let usage)
+      profile = {
+        name: defaultName,
+        age: defaultAge,
+        city: defaultCity,
+        skills: defaultSkills.slice(),
+        isPremium: defaultPremium,
+        createdAt: accountCreated
+      };
+      console.log("Reset profile to defaults");
+      fillInputs();
+      renderProfile();
+      mirrorDebug();
+    });
+
+    // -----------------------
+    // 5. Initial render & logs
+    // -----------------------
+    renderProfile();
+    fillInputs();
+    console.log("Initial profile loaded:");
+    mirrorDebug();
+
+    // Extra: demonstrate 'var' hoisting concept (won't error)
+    // The variable 'hoistedVar' is used before it's declared below; JS hoists it.
+    console.log("Hoisted var before declaration:", typeof hoistedVar); // 'undefined'
+    var hoistedVar = "I'm hoisted!";
+    console.log("Hoisted var after declaration:", hoistedVar);
+  </script>
+</body>
+</html>
